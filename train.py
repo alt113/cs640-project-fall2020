@@ -21,6 +21,8 @@ import pickle
 import cv2
 import os
 
+PATH_TO_DIR = os.getcwd()
+
 # parse CLI args
 ap = argparse.ArgumentParser()
 ap.add_argument('-d', '--dataset', required=True, help='path to input dataset')
@@ -31,30 +33,41 @@ ap.add_argument('-p', '--plot', type=str, default='plot.png', help='path to loss
 args = vars(ap.parse_args())
 
 # lets initialize the labels and load the data after parsing our CLI
-LABELS = {['negative', 'neutral', 'positive']}
+LABELS = set(['negative', 'neutral', 'positive'])
 
 print('loading images...')
 
-imagePath = [paths.list_images(args['dataset'])]
+# imagePath = [paths.list_images(args['dataset'])]
+imagePath = os.listdir(PATH_TO_DIR + '/' + args['dataset'])
+imagePath.remove('.DS_Store')
 
 data, labels = [], []
+i = 0
 
 # loop over the image paths
 for img_path in imagePath:
     # extract the class label from the file name
-    label = img_path.split(os.path.sep)[-2]
+    if img_path.find('positive') != -1:
+        label = 'positive'
+    elif img_path.find('negative') != -1:
+        label = 'negative'
+    else:
+        label = 'neutral'
+    # label = img_path.split(os.path.sep)[-2]
 
     # load the image
-    image = cv2.imread(img_path)
+    image = cv2.imread(PATH_TO_DIR + '/' + args['dataset'] + '/' + img_path)
 
     # convert from BGR to RGB
     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+    # print(img_path, image.shape, label, i)
 
     # fix image size to 224x224
     image = cv2.resize(image, (224, 224))
 
     data.append(image)
     labels.append(label)
+    i += 1
 
 # convert the data and labels into numpy arrays
 data, labels = np.array(data), np.array(labels)
