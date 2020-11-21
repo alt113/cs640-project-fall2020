@@ -1,0 +1,13 @@
+
+              precision    recall  f1-score   support
+
+    negative       0.50      0.24      0.33       189
+     neutral       0.78      0.83      0.81      1716
+    positive       0.77      0.77      0.77      1516
+
+    accuracy                           0.77      3421
+   macro avg       0.68      0.61      0.63      3421
+weighted avg       0.76      0.77      0.76      3421
+
+A possible reason for the low f1-score for negative is because I aggregated a wide range
+of emotions under the umbrella of 'negative' ('anger', 'disgust', 'fear', 'sadness', 'contempt').
